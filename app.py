@@ -2,6 +2,9 @@
 
 import streamlit as st 
 import pandas as pd
+from pathlib import Path 
+
+caminho = Path(__file__).resolve().parent/"data"/"ibov.csv"
 
 
 
@@ -31,9 +34,7 @@ else:
 #wanrning e info muda a cor da resposta ao clicar no botão (info é azul e warning é vermelho)
 
 
-#Pegando um dataframe: 
-df = pd.read_csv("C:\\Users\\Dell\\Documents\\Ciência de Dados IBMEC\\Projeto em Ciência de Dados I\\exercicios_aula\\frontend\\data\\ibov.csv")
-df = pd.DataFrame(df)   
+
 
 #com o data frame fornecido: criar uma tabela no site usando o streamlit 
 with abas[2]:
@@ -62,3 +63,26 @@ with abas[3]:
 
 
 
+if caminho.exists():
+    df = pd.read_csv("C:\\Users\\Dell\\Documents\\Ciência de Dados IBMEC\\Projeto em Ciência de Dados I\\exercicios_aula\\frontend\\data\\ibov.csv")
+    st.dataframe(df)
+else:
+    st.error("Arquivo não encontrado:" + str(caminho))
+
+with abas[3]:
+    np.random.seed(19680801)
+    fig, ax = plt.subplots()
+    people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
+    y_pos = np.arange(len(people))
+    performance = 3 + 10 * np.random.rand(len(people))
+    error = np.random.rand(len(people))
+
+    # Criando o gráfico de barras horizontais
+    ax.barh(y_pos, performance, xerr=error, align='center')
+    ax.set_yticks(y_pos, labels=people)
+    ax.invert_yaxis()  # Inverter ordem das labels
+    ax.set_xlabel('Performance')
+    ax.set_title('How fast do you want to go today?')
+
+    # Exibir o gráfico no Streamlit
+    st.pyplot(fig)
