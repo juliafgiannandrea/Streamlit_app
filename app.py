@@ -30,14 +30,14 @@ with abas[0]:
 
 # Aba do radio (com a escolha do time)
 with abas[1]:
-    opcao = st.radio("Escolha seu time:", ["flamengo", "corinthians", "outro"])
+    opcao = st.radio("Escolha seu time:", ["flamengo", "corinthians", "palmeiras"])
     
     if opcao == "flamengo":
         st.info("Você é um urubu")
     elif opcao == "corinthians":
-        st.warning("Você é um campeão")
+        st.error("Você é campeão")
     else:
-        st.error("Você é um perdedor")
+        st.warning("Você é um perdedor")
 
 # Aba do DataFrame
 with abas[2]:
@@ -52,22 +52,23 @@ with abas[2]:
 
 # Aba do gráfico
 with abas[3]:
-    # Fixar o estado aleatório para reprodutibilidade
-    np.random.seed(19680801)
+    # Gráfico com dados do DataFrame
+    if 'df' in locals():  # Verifica se o DataFrame foi carregado
+        fig, ax = plt.subplots()
+        
+        # Gráfico de barras com dados do DataFrame
+        ax.bar(df["data"], df["abertura"], color='tab:red')
 
-    # Dados de exemplo
-    fig, ax = plt.subplots()
-    people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
-    y_pos = np.arange(len(people))
-    performance = 3 + 10 * np.random.rand(len(people))
-    error = np.random.rand(len(people))
+        # Nome do eixo Y
+        ax.set_ylabel('Valores de Abertura')
 
-    # Criando o gráfico de barras horizontais
-    ax.barh(y_pos, performance, xerr=error, align='center')
-    ax.set_yticks(y_pos, labels=people)
-    ax.invert_yaxis()  # Inverter ordem das labels
-    ax.set_xlabel('Performance')
-    ax.set_title('How fast do you want to go today?')
+        # Nome do eixo X
+        ax.set_xlabel("Datas - de 2000-01-03 a 2024-04-01")
 
-    # Exibir o gráfico no Streamlit
-    st.pyplot(fig)
+        # Nome do gráfico
+        ax.set_title('Variações no Ibovespa')
+
+        # Exibir o gráfico no Streamlit
+        st.pyplot(fig)
+    else:
+        st.error("Não foi possível criar o gráfico, pois o DataFrame não está disponível.")
