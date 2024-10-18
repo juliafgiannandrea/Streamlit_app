@@ -1,76 +1,61 @@
-#Usando o Streamlit:
-
-import streamlit as st 
+import streamlit as st
 import pandas as pd
-from pathlib import Path 
+import matplotlib.pyplot as plt
+import numpy as np
+from pathlib import Path
 
-caminho = Path(__file__).resolve().parent/"data"/"ibov.csv"
+# Obter o diretório do arquivo atual e configurar o caminho
+caminho = Path(__file__).resolve().parent / "data" / "ibov.csv"
 
-
-
+# Título e cabeçalho do app
 st.title("Meu primeiro dashboard")
 st.header("Esse é um header")
 
-#Criando abas: 
-abas = st.tabs(["Botão", "Radio", "Dataframe", "Gráfico"])
+# Exemplo de Markdown
+st.markdown(
+    '''
+    # 1
+    ## 2
+    ### 3
+    '''
+)
 
-with abas[0]: 
+# Criação de abas
+abas = st.tabs(["Botão", "Radio", "DataFrame", "Gráfico"])
+
+# Aba do botão
+with abas[0]:
     if st.button("Clique aqui"):
         st.text("Você apertou o botão")
 
-with abas[1]: 
-    opcao = st.radio(
-        "Escolha a opção:",
-        ("flamengo", "corinthians", "palmeiras")
-        )
+# Aba do radio (com a escolha do time)
+with abas[1]:
+    opcao = st.radio("Escolha seu time:", ["flamengo", "corinthians", "outro"])
+    
+    if opcao == "flamengo":
+        st.info("Você é um urubu")
+    elif opcao == "corinthians":
+        st.warning("Você é um campeão")
+    else:
+        st.error("Você é um perdedor")
 
-if opcao == "flamengo":
-    st.info("Você é um urubu")
-elif opcao == "corinthians":
-    st.error("Você é campeão")
-else:
-   st.warning("Você é um perdedor") 
-
-#wanrning e info muda a cor da resposta ao clicar no botão (info é azul e warning é vermelho)
-
-
-
-
-#com o data frame fornecido: criar uma tabela no site usando o streamlit 
+# Aba do DataFrame
 with abas[2]:
-    st.dataframe(df)
+    st.subheader("Exibição do DataFrame")
+    
+    # Verificar se o arquivo existe e, em caso afirmativo, exibir o DataFrame
+    if caminho.exists():
+        df = pd.read_csv(caminho)
+        st.dataframe(df)
+    else:
+        st.error("Arquivo não encontrado: " + str(caminho))
 
-
-#fazer gráfico do dataframe com os dados do dataframe: 
-import matplotlib.pyplot as plt
-import numpy as np 
-
-with abas[3]: 
-    fig, ax = plt.subplots()
-    ax.bar(df["data"], df["abertura"], color='tab:red')
-
-# Nome do eixo Y
-    ax.set_ylabel('Valores de abertura')
-
-#Nome do eixo X:
-    ax.set_xlabel("Datas - de 2000-01-03 a 2024-04-01")
-
-# Nome do gráfico
-    ax.set_title('Variações no Ibovespa')
-
-# Jogando o gráfico no Streamlit
-    st.pyplot(fig)
-
-
-
-if caminho.exists():
-    df = pd.read_csv("C:\\Users\\Dell\\Documents\\Ciência de Dados IBMEC\\Projeto em Ciência de Dados I\\exercicios_aula\\frontend\\data\\ibov.csv")
-    st.dataframe(df)
-else:
-    st.error("Arquivo não encontrado:" + str(caminho))
-
+# Aba do gráfico
 with abas[3]:
+    # Fixar o estado aleatório para reprodutibilidade
     np.random.seed(19680801)
+
+    # Dados de exemplo
     fig, ax = plt.subplots()
     people = ('Tom', 'Dick', 'Harry', 'Slim', 'Jim')
     y_pos = np.arange(len(people))
